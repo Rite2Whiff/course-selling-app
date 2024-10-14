@@ -17,7 +17,7 @@ adminRouter.post("/signup", async (req, res) => {
   });
 
   res.json({
-    messgae: "Successfully signed up",
+    messsage: "Successfully signed up",
   });
 });
 
@@ -30,7 +30,7 @@ adminRouter.post("/login", async (req, res) => {
 
   if (!currAdmin) {
     res.json({
-      messgae: "Admin not found in our database",
+      message: "Admin not found in our database",
     });
     return;
   }
@@ -49,7 +49,7 @@ adminRouter.post("/login", async (req, res) => {
     });
   } else {
     res.json({
-      messgae: "Invalid admin credentials",
+      message: "Invalid admin credentials",
     });
   }
 });
@@ -67,13 +67,57 @@ adminRouter.post("/course", adminAuth, async (req, res) => {
   });
 
   res.json({
-    messgae: "course created successfully",
+    message: "course created successfully",
     courseId: course._id,
   });
 });
 
-adminRouter.put("/course", (req, res) => {});
+adminRouter.put("/course", adminAuth, async (req, res) => {
+  const adminId = req.adminId;
+  const { title, description, price, imageURL, courseId } = req.body;
 
-adminRouter.get("/course/bulk", (req, res) => {});
+  const currCourse = await courseModel.findOne({
+    _id: courseId,
+    creatorId: adminId,
+  });
+
+  if (!currCourse) {
+    res.json({
+      message: "Course not found",
+    });
+    return;
+  }
+
+  const updateCourse = await courseModel.updateOne({
+    title,
+    description,
+    price,
+    imageURL,
+  });
+
+  res.json({
+    message: "Course updated sucessfully",
+    courseId: updateCourse._id,
+  });
+});
+
+adminRouter.get("/course/bulk", adminAuth, async (req, res) => {
+  const adminId = req.adminId;
+
+  const courses = await courseModel.find({
+    creatorId: adminId,
+  });
+
+  if (!courses) {
+    res.json({
+      message: "Course not found",
+    });
+  } else {
+    res.json({
+      message: "Courses found successfully",
+      courses,
+    });
+  }
+});
 
 module.exports = adminRouter;
