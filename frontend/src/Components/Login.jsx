@@ -23,7 +23,10 @@ const Signup = () => {
       password: password,
     });
 
-    console.log(response);
+    const token = response.data.token;
+    localStorage.setItem("token", token);
+
+    alert("sucessfully signed in");
   }
 
   return (

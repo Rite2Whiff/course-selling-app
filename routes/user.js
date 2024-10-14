@@ -21,7 +21,7 @@ userRouter.post("/signup", async (req, res) => {
   });
 
   res.json({
-    message: "Successfully signed up",
+    message: "User Successfully signed up",
   });
 });
 

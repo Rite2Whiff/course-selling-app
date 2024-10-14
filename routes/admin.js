@@ -17,7 +17,7 @@ adminRouter.post("/signup", async (req, res) => {
   });
 
   res.json({
-    messsage: "Successfully signed up",
+    message: "Admin Successfully signed up",
   });
 });
 
